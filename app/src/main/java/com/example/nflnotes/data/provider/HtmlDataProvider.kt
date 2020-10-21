@@ -9,7 +9,7 @@ import org.jsoup.Jsoup
 
 class HtmlDataProvider : IDataProvider {
 
-    companion object{
+    companion object {
         private const val BASE_URL = "https://www.nfl.com/schedules/2020/REG1/"
     }
     override fun getGames(): LiveData<List<Game>> {
@@ -21,7 +21,7 @@ class HtmlDataProvider : IDataProvider {
     }
 
     private fun getData() : List<Game>? {
-        val result : MutableList<Game>?
+        val result : MutableList<Game> = mutableListOf()
         val document = Jsoup.connect(BASE_URL).get()
         val element = document.select("div[nfl-c-matchup-strip nfl-c-matchup-strip--post-game]")
 
