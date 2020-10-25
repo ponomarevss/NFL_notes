@@ -1,61 +1,51 @@
 package com.example.nflnotes.data.provider
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.nflnotes.data.entity.Game
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
+import org.jsoup.select.Elements
 
 class HtmlDataProvider : IDataProvider {
 
-    companion object {
-        private const val BASE_URL = "https://www.nfl.com/schedules/2020/REG1/"
-    }
-    override fun getGames(): LiveData<List<Game>> {
-        val result = MutableLiveData<List<Game>>()
+    override fun getGames(url: String): List<Game> {
+        val result = mutableListOf<Game>()
         GlobalScope.launch {
-            getData()
+            val elements = getGamesData(url)
+            GlobalScope.launch(Dispatchers.Main) {
+                for (i in elements.size - 1 downTo 0) {
+                    val game : Game = renderGameData(elements[i])
+                    result.add(game)
+                }
+            }
         }
         return result
     }
 
-    private fun getData() : List<Game>? {
-        val result : MutableList<Game> = mutableListOf()
-        val document = Jsoup.connect(BASE_URL).get()
-        val element = document.select("div[nfl-c-matchup-strip nfl-c-matchup-strip--post-game]")
+    private fun renderGameData(element: Element): Game {
+        val hostName = element
+            .select("a.team.helper-team-name")[0]
+            .text()
+        val guestName = element
+            .select("a.team.helper-team-name")[1]
+            .text()
 
-        for (i in 0 until  element.size) {
-            val hostName : String = element.select("div[nfl-c-matchup-strip__game]")
-                .select("div[nfl-c-matchup-strip__team nfl-c-matchup-strip__team--opponent]")
-                .select("p[nfl-c-matchup-strip__team-name]")
-                .select("span[nfl-c-matchup-strip__team-abbreviation]")
-                .eq(i)
-                .text()
-
-            val hostScore : String = element.select("div[nfl-c-matchup-strip__game]")
-                .select("div[nfl-c-matchup-strip__team nfl-c-matchup-strip__team--opponent]")
-                .select("div[nfl-c-matchup-strip__team-score]")
-                .eq(i)
-                .text()
-
-            val guestName : String = element.select("div[nfl-c-matchup-strip__game]")
-                .select("div[nfl-c-matchup-strip__team]")
-                .select("p[nfl-c-matchup-strip__team-name]")
-                .select("span[nfl-c-matchup-strip__team-abbreviation]")
-                .eq(i)
-                .text()
-
-            val guestScore : String = element.select("div[nfl-c-matchup-strip__game]")
-                .select("div[nfl-c-matchup-strip__team]")
-                .select("div[nfl-c-matchup-strip__team-score]")
-                .eq(i)
-                .text()
-
-            val game = Game(hostName, hostScore, guestName, guestScore)
-            result.add(game)
+        val gameResult = element.select("td.total-score")
+        val hostScore = when(gameResult.size) {
+            2 -> gameResult[0].text()
+            else -> "-"
         }
+        val guestScore = when(gameResult.size) {
+            2 -> gameResult[1].text()
+            else -> "-"
+        }
+        return Game(hostName, hostScore, guestName, guestScore)
+    }
 
-        return result
+    private fun getGamesData(url : String) : Elements {
+        val document = Jsoup.connect(url).get()
+        return document.select("div.in-progress-table.section")
     }
 }
