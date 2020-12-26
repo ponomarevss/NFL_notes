@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.nflnotes.R
 import com.example.nflnotes.mvp.model.api.ApiHolder
-import com.example.nflnotes.mvp.model.entity.User
 import com.example.nflnotes.mvp.model.repo.RetrofitTokenRepo
 import com.example.nflnotes.mvp.presenter.MainPresenter
 import com.example.nflnotes.mvp.view.MainView
@@ -13,7 +12,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainView {
 
-    val presenter = MainPresenter(this, AndroidSchedulers.mainThread(), RetrofitTokenRepo(ApiHolder.api, User()))
+    val presenter = MainPresenter(this, AndroidSchedulers.mainThread(), RetrofitTokenRepo(ApiHolder.api))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +22,11 @@ class MainActivity : AppCompatActivity(), MainView {
 
     }
 
-    override fun setTestText(text: String) {
-        test_tv.text = text
+    override fun setTokenText(text: String) {
+        token_tv.text = text
+    }
+
+    override fun setGamesText(text: String) {
+        games_tv.text = text
     }
 }

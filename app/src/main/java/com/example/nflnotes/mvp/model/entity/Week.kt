@@ -6,7 +6,11 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class Token(
-    @SerializedName("access_token")
-    @Expose val accessToken: String?
+data class Week(
+    @SerializedName("week.season")
+    @Expose val season: Int = 2018,
+    @SerializedName("week.seasonType")
+    @Expose val seasonType: String = "REG",
+    @SerializedName("week.week")
+    @Expose val week: Int = 6
 ) : Parcelable
