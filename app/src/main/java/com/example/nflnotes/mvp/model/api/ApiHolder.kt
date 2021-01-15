@@ -1,6 +1,5 @@
 package com.example.nflnotes.mvp.model.api
 
-import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory

@@ -1,7 +1,8 @@
 package com.example.nflnotes.mvp.model.api
 
-import com.example.nflnotes.mvp.model.entity.GamesQuery
-import com.example.nflnotes.mvp.model.entity.Token
+import com.example.nflnotes.mvp.model.entity.query.Token
+import com.example.nflnotes.mvp.model.entity.response.GamesResponse
+import com.example.nflnotes.mvp.model.entity.response.TeamsResponse
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.*
 
@@ -14,9 +15,15 @@ interface IDataSource {
         @Query("client_secret") clientSecret: String
     ): Single<Token>
 
-    @GET("/v1/games")
+    @GET("v1/games")
     fun gamesResponse(
         @Header("authorization") token: String,
-        @Query("s") query: GamesQuery,
-    ): Single<String>
+        @Query("s") s: String,
+    ): Single<GamesResponse>
+
+    @GET("v1/teams")
+    fun teamsResponse(
+        @Header("authorization") token: String,
+        @Query("s") s: String,
+    ): Single<TeamsResponse>
 }

@@ -1,4 +1,4 @@
-package com.example.nflnotes.mvp.model.entity
+package com.example.nflnotes.mvp.model.entity.response
 
 import android.os.Parcelable
 import com.google.gson.annotations.Expose
@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class Token(
-    @SerializedName("access_token")
-    @Expose val accessToken: String?
-) : Parcelable
+data class GamesResponse(
+    @SerializedName("data")
+    @Expose val games: List<Game>?
+): Parcelable

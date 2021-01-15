@@ -8,11 +8,13 @@ import com.example.nflnotes.mvp.model.entity.games.TeamsQuery
 import com.google.gson.Gson
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class RetrofitTokenRepo(val api: IDataSource) : ITokenRepo {
+class RetrofitGamesRepo(val api: IDataSource) : IGamesRepo {
 
-    override fun getToken() = api.authResponse(
-        AuthData.grandType,
-        AuthData.clientId,
-        AuthData.clientSecret
+    val gson = Gson()
+
+    override fun getGames(token: Token, query: GamesQuery) = api.gamesResponse(
+        "Bearer ${token.accessToken}",
+        gson.toJson(query)
     ).subscribeOn(Schedulers.io())
+
 }
