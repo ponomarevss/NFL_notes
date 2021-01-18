@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">NFL notes</string>
+    <string name="vs">vs</string>
 </resources>

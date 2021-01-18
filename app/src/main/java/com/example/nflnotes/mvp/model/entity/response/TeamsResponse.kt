@@ -1,6 +1,7 @@
 package com.example.nflnotes.mvp.model.entity.response
 
 import android.os.Parcelable
+import com.example.nflnotes.mvp.model.entity.Team
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
