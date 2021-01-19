@@ -1,6 +1,6 @@
 package com.example.nflnotes.mvp.model.api
 
-import com.example.nflnotes.mvp.model.entity.query.Token
+import com.example.nflnotes.mvp.model.entity.Token
 import com.example.nflnotes.mvp.model.entity.response.GamesResponse
 import com.example.nflnotes.mvp.model.entity.response.TeamsResponse
 import io.reactivex.rxjava3.core.Single
@@ -17,13 +17,13 @@ interface IDataSource {
 
     @GET("v1/games")
     fun gamesResponse(
-        @Header("authorization") token: String,
+        @Header("authorization") accessToken: String,
         @Query("s") s: String,
     ): Single<GamesResponse>
 
     @GET("v1/teams")
     fun teamsResponse(
-        @Header("authorization") token: String,
+        @Header("authorization") accessToken: String,
         @Query("s") s: String,
     ): Single<TeamsResponse>
 }

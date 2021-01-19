@@ -1,6 +1,9 @@
 package com.example.nflnotes.mvp.presenter
 
 import com.example.nflnotes.mvp.model.entity.Game
+import com.example.nflnotes.mvp.model.entity.Token
+import com.example.nflnotes.mvp.model.entity.games.GamesQuery
+import com.example.nflnotes.mvp.model.entity.query.Week
 import com.example.nflnotes.mvp.model.repo.IDataRepo
 import com.example.nflnotes.mvp.presenter.list.IGamesListPresenter
 import com.example.nflnotes.mvp.view.GamesView
@@ -11,7 +14,7 @@ import moxy.MvpPresenter
 class GamesPresenter(val mainThreadScheduler: Scheduler, val repo: IDataRepo) :
     MvpPresenter<GamesView>() {
 
-    class GamesListPresenter: IGamesListPresenter {
+    class GamesListPresenter : IGamesListPresenter {
         val games = mutableListOf<Game>()
 
         override var itemClickListener: ((IGameItemView) -> Unit)? = null
@@ -27,6 +30,28 @@ class GamesPresenter(val mainThreadScheduler: Scheduler, val repo: IDataRepo) :
 
     val gamesListPresenter = GamesListPresenter()
 
+    fun loadGames(query: GamesQuery) {
+        repo.getGames(query)
+            .observeOn(mainThreadScheduler)
+            .subscribe({ gamesResponse ->
+                gamesListPresenter.games.clear()
+                gamesResponse.games?.let { it -> gamesListPresenter.games.addAll(it) }
+            }, {
+                println("Can't get that GAMES: ${it.message}")
+            })
+        viewState.updateList()
+    }
+
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        viewState.init()
+        loadGames(GamesQuery(Week(2018, "REG", 6)))
+        //todo: вводить данные из viewState
+
+        gamesListPresenter.itemClickListener = { itemView ->
+            //todo:отображать результат игры, формировать сводную таблицу
+        }
+    }
 }
 
 // class MainPresenter(val view: MainView, val mainThreadScheduler: Scheduler, val repo: IDataRepo) {

@@ -1,4 +1,4 @@
-package com.example.nflnotes.mvp.model.entity.query
+package com.example.nflnotes.mvp.model.entity
 
 import android.os.Parcelable
 import com.google.gson.annotations.Expose

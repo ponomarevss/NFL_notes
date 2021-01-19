@@ -12,7 +12,7 @@ object ApiHolder {
         val gson = GsonBuilder()
 //            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .excludeFieldsWithoutExposeAnnotation()
-        .create()
+            .create()
 
         Retrofit.Builder()
             .baseUrl("https://api.nfl.com/")
