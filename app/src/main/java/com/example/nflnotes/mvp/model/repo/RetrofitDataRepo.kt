@@ -24,11 +24,11 @@ class RetrofitDataRepo(private val api: IDataSource) : IDataRepo {
     override fun getGames(token: Token, query: GamesQuery) = api.gamesResponse(
         "Bearer ${token.accessToken}",
         gson.toJson(query)
-    ).subscribeOn(Schedulers.io())
+    )
 
     override fun getTeams(token: Token, query: TeamsQuery) = api.teamsResponse(
         "Bearer ${token.accessToken}",
         gson.toJson(query)
-    ).subscribeOn(Schedulers.io())
+    )
 
 }

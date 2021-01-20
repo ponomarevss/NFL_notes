@@ -27,16 +27,13 @@ class GamesPresenter(val mainThreadScheduler: Scheduler, val repo: IDataRepo) :
         override fun bindView(view: IGameItemView) {
             val game = games[view.pos]
             view.setTeams(
-//                game.homeTeam?.id,
-//                game.visitorTeam?.id
                 game.homeTeam?.id?.let { getTeamById(it)?.abbr },
                 game.visitorTeam?.id?.let { getTeamById(it)?.abbr }
             )
-            view.setScore(game.homeTeamScore?.pointsTotal, game.visitorTeamScore?.pointsTotal)
         }
 
-        private fun getTeamById(teamId : String) : Team? {
-            var team : Team? = null
+        private fun getTeamById(teamId: String): Team? {
+            var team: Team? = null
             teams.forEach {
                 if (it.id == teamId)
                     team = it
@@ -51,18 +48,22 @@ class GamesPresenter(val mainThreadScheduler: Scheduler, val repo: IDataRepo) :
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.init()
-        getGames(GamesQuery(Week(2018, "REG", 6)))
         getTeams(TeamsQuery(Season(2018)))
+        getGames(GamesQuery(Week(2018, "REG", 6)))
         //todo: вводить данные из viewState
 
         gamesListPresenter.itemClickListener = { itemView ->
+            itemView.setScore(
+                gamesListPresenter.games[itemView.pos].homeTeamScore?.pointsTotal,
+                gamesListPresenter.games[itemView.pos].visitorTeamScore?.pointsTotal
+            )
+
             //todo:отображать результат игры, формировать сводную таблицу
         }
     }
 
     fun getGames(query: GamesQuery) {
         repo.getToken()
-            .observeOn(mainThreadScheduler)
             .subscribe({ token ->
                 repo.getGames(token, query)
                     .observeOn(mainThreadScheduler)
@@ -81,7 +82,6 @@ class GamesPresenter(val mainThreadScheduler: Scheduler, val repo: IDataRepo) :
 
     fun getTeams(query: TeamsQuery) {
         repo.getToken()
-            .observeOn(mainThreadScheduler)
             .subscribe({ token ->
                 repo.getTeams(token, query)
                     .observeOn(mainThreadScheduler)
