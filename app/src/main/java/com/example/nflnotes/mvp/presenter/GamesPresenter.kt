@@ -13,7 +13,7 @@ import com.example.nflnotes.mvp.view.list.IGameItemView
 import io.reactivex.rxjava3.core.Scheduler
 import moxy.MvpPresenter
 
-class GamesPresenter(private val mainThreadScheduler: Scheduler, private val repo: IDataRepo) :
+class GamesPresenter(val mainThreadScheduler: Scheduler, val repo: IDataRepo) :
     MvpPresenter<GamesView>() {
 
     class GamesListPresenter : IGamesListPresenter {
@@ -27,6 +27,8 @@ class GamesPresenter(private val mainThreadScheduler: Scheduler, private val rep
         override fun bindView(view: IGameItemView) {
             val game = games[view.pos]
             view.setTeams(
+//                game.homeTeam?.id,
+//                game.visitorTeam?.id
                 game.homeTeam?.id?.let { getTeamById(it)?.abbr },
                 game.visitorTeam?.id?.let { getTeamById(it)?.abbr }
             )
@@ -34,8 +36,8 @@ class GamesPresenter(private val mainThreadScheduler: Scheduler, private val rep
         }
 
         private fun getTeamById(teamId : String) : Team? {
-            lateinit var team : Team
-            teams?.forEach {
+            var team : Team? = null
+            teams.forEach {
                 if (it.id == teamId)
                     team = it
             }
@@ -44,30 +46,7 @@ class GamesPresenter(private val mainThreadScheduler: Scheduler, private val rep
 
     }
 
-    private val gamesListPresenter = GamesListPresenter()
-
-    private fun getGames(query: GamesQuery) {
-        repo.getGames(query)
-            .observeOn(mainThreadScheduler)
-            .subscribe({ gamesResponse ->
-                gamesListPresenter.games.clear()
-                gamesResponse.games?.let { it -> gamesListPresenter.games.addAll(it) }
-            }, {
-                println("Can't get the gamesResponse: ${it.message}")
-            })
-        viewState.updateList()
-    }
-
-    private fun getTeams(query: TeamsQuery) {
-        repo.getTeams(query)
-            .observeOn(mainThreadScheduler)
-            .subscribe({teamsResponse ->
-                gamesListPresenter.teams.clear()
-                teamsResponse.teams?.let { gamesListPresenter.teams.addAll(it) }
-            }, {
-                println("Can't get teamsResponse: ${it.message}")
-            })
-    }
+    val gamesListPresenter = GamesListPresenter()
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -80,39 +59,43 @@ class GamesPresenter(private val mainThreadScheduler: Scheduler, private val rep
             //todo:отображать результат игры, формировать сводную таблицу
         }
     }
-}
 
-// class MainPresenter(val view: MainView, val mainThreadScheduler: Scheduler, val repo: IDataRepo) {
-//
-//    fun loadData() = repo.getToken()
-//        .observeOn(mainThreadScheduler)
-//        .subscribe({ authResponse ->
-//            authResponse.accessToken?.let {
-//                view.setTokenText(it)
-//            }
-//            println("Here is your TOKEN: ${authResponse.accessToken}")
-//            loadGames(authResponse, GamesQuery(Week(2018, "REG", 6)))
-//            loadTeams(authResponse, TeamsQuery(Season(2018)))
-//        }, {
-//            println("Can't get your TOKEN: ${it.message}")
-//        })
-//
-//    fun loadGames(token: Token, query: GamesQuery) = repo.getGames(token, query)
-//        .observeOn(mainThreadScheduler)
-//        .subscribe({
-//            it.games?.get(0)?.let { game -> view.setGamesText(game.toString()) }
-//            println("Here is your GAMES: $it")
-//        },{
-//            println("Can't get your GAMES: ${it.message}")
-//        })
-//
-//    fun loadTeams(token: Token, query: TeamsQuery) = repo.getTeams(token, query)
-//        .observeOn(mainThreadScheduler)
-//        .subscribe({
-//            it.teams?.get(0)?.let { team -> view.setTeamsText(team.toString()) }
-//            println("Here is your TEAMS: $it")
-//        },{
-//            println("Can't get your TEAMS: ${it.message}")
-//        })
-//
-//}
+    fun getGames(query: GamesQuery) {
+        repo.getToken()
+            .observeOn(mainThreadScheduler)
+            .subscribe({ token ->
+                repo.getGames(token, query)
+                    .observeOn(mainThreadScheduler)
+                    .subscribe({ gamesResponse ->
+                        println("gamesResponse: $gamesResponse")
+                        gamesListPresenter.games.clear()
+                        gamesResponse.games?.let { it -> gamesListPresenter.games.addAll(it) }
+                        viewState.updateList()
+                    }, {
+                        println("Can't get the gamesResponse: ${it.message}")
+                    })
+            }, {
+                println("Can't get the authResponse: ${it.message}")
+            })
+    }
+
+    fun getTeams(query: TeamsQuery) {
+        repo.getToken()
+            .observeOn(mainThreadScheduler)
+            .subscribe({ token ->
+                repo.getTeams(token, query)
+                    .observeOn(mainThreadScheduler)
+                    .subscribe({ teamsResponse ->
+                        println("teamsResponse: $teamsResponse")
+                        gamesListPresenter.teams.clear()
+                        teamsResponse.teams?.let { it -> gamesListPresenter.teams.addAll(it) }
+                    }, {
+                        println("Can't get the teamsResponse: ${it.message}")
+                    })
+            }, {
+                println("Can't get the authResponse: ${it.message}")
+            })
+//        viewState.updateList()
+    }
+
+}

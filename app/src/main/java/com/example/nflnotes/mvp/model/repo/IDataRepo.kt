@@ -8,9 +8,9 @@ import com.example.nflnotes.mvp.model.entity.response.TeamsResponse
 import io.reactivex.rxjava3.core.Single
 
 interface IDataRepo {
-//    fun getToken(): Single<Token>
-    fun getGames(query: GamesQuery): Single<GamesResponse>
-    fun getTeams(query: TeamsQuery): Single<TeamsResponse>
-//    fun getGames(token: Token, query: GamesQuery): Single<GamesResponse>
-//    fun getTeams(token: Token, query: TeamsQuery): Single<TeamsResponse>
+    fun getToken(): Single<Token>
+//    fun getGames(query: GamesQuery): Single<GamesResponse>
+//    fun getTeams(query: TeamsQuery): Single<TeamsResponse>
+    fun getGames(token: Token, query: GamesQuery): Single<GamesResponse>
+    fun getTeams(token: Token, query: TeamsQuery): Single<TeamsResponse>
 }

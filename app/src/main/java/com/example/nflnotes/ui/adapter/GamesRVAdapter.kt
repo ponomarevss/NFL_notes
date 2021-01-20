@@ -10,10 +10,13 @@ import com.example.nflnotes.mvp.view.list.IGameItemView
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_game.*
 
-class GamesRVAdapter(val presenter: IGamesListPresenter) : RecyclerView.Adapter<GamesRVAdapter.ViewHolder>() {
+class GamesRVAdapter(val presenter: IGamesListPresenter) :
+    RecyclerView.Adapter<GamesRVAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_game, parent, false)).apply {
+        ViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_game, parent, false)
+        ).apply {
             containerView.setOnClickListener {
                 presenter.itemClickListener?.invoke(this)
             }
@@ -31,12 +34,12 @@ class GamesRVAdapter(val presenter: IGamesListPresenter) : RecyclerView.Adapter<
 
         override var pos = -1
 
-        override fun setTeams(homeTeam: String, visitorTeam: String) = with(containerView) {
+        override fun setTeams(homeTeam: String?, visitorTeam: String?) = with(containerView) {
             homeTeam_tv.text = homeTeam
             visitorTeam_tv.text = visitorTeam
         }
 
-        override fun setScore(homeTeamScore: Int?, visitorTeamScore: Int?)  = with(containerView) {
+        override fun setScore(homeTeamScore: Int?, visitorTeamScore: Int?) = with(containerView) {
             homeTeamScore_tv.text = homeTeamScore.toString()
             visitorTeamScore_tv.text = visitorTeamScore.toString()
         }
