@@ -57,8 +57,7 @@ class GamesPresenter(val mainThreadScheduler: Scheduler, val repo: IDataRepo) :
                 gamesListPresenter.games[itemView.pos].homeTeamScore?.pointsTotal,
                 gamesListPresenter.games[itemView.pos].visitorTeamScore?.pointsTotal
             )
-
-            //todo:отображать результат игры, формировать сводную таблицу
+            //todo: формировать сводную таблицу
         }
     }
 
@@ -89,13 +88,13 @@ class GamesPresenter(val mainThreadScheduler: Scheduler, val repo: IDataRepo) :
                         println("teamsResponse: $teamsResponse")
                         gamesListPresenter.teams.clear()
                         teamsResponse.teams?.let { it -> gamesListPresenter.teams.addAll(it) }
+                        viewState.updateList()
                     }, {
                         println("Can't get the teamsResponse: ${it.message}")
                     })
             }, {
                 println("Can't get the authResponse: ${it.message}")
             })
-//        viewState.updateList()
     }
 
 }

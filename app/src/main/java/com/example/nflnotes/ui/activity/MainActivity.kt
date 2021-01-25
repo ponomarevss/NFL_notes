@@ -1,6 +1,5 @@
 package com.example.nflnotes.ui.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.nflnotes.R
@@ -17,10 +16,7 @@ import moxy.ktx.moxyPresenter
 class MainActivity : MvpAppCompatActivity(), GamesView {
 
     private val presenter by moxyPresenter {
-        GamesPresenter(
-            AndroidSchedulers.mainThread(),
-            RetrofitDataRepo(ApiHolder.api)
-        )
+        GamesPresenter(AndroidSchedulers.mainThread(), RetrofitDataRepo(ApiHolder.api))
     }
     var adapter: GamesRVAdapter? = null
 

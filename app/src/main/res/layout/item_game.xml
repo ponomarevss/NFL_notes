@@ -25,7 +25,8 @@
             android:id="@+id/homeTeamScore_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"/>
+            android:layout_margin="8dp"
+            tools:ignore="RtlHardcoded" />
     </LinearLayout>
 
     <TextView
