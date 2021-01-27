@@ -26,10 +26,11 @@ class GamesPresenter(val mainThreadScheduler: Scheduler, val repo: IDataRepo) :
 
         override fun bindView(view: IGameItemView) {
             val game = games[view.pos]
-            view.setTeams(
-                game.homeTeam?.id?.let { getTeamById(it)?.abbr },
-                game.visitorTeam?.id?.let { getTeamById(it)?.abbr }
-            )
+            initTeams(view, game)
+            initScores(view, game)
+        }
+
+        private fun initScores(view: IGameItemView, game: Game) {
             if (game.isWatched) {
                 view.setScore(
                     game.homeTeamScore?.pointsTotal.toString(),
@@ -39,6 +40,11 @@ class GamesPresenter(val mainThreadScheduler: Scheduler, val repo: IDataRepo) :
                 view.setScore("", "")
             }
         }
+
+        private fun initTeams(view: IGameItemView, game: Game) = view.setTeams(
+                game.homeTeam?.id?.let { getTeamById(it)?.abbr },
+                game.visitorTeam?.id?.let { getTeamById(it)?.abbr }
+            )
 
         private fun getTeamById(teamId: String): Team? {
             var team: Team? = null
