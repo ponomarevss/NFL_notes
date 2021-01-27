@@ -30,8 +30,13 @@ class GamesPresenter(val mainThreadScheduler: Scheduler, val repo: IDataRepo) :
                 game.homeTeam?.id?.let { getTeamById(it)?.abbr },
                 game.visitorTeam?.id?.let { getTeamById(it)?.abbr }
             )
-            if (game.isWatched){
-                view.setScore(game.homeTeamScore?.pointsTotal, game.visitorTeamScore?.pointsTotal)
+            if (game.isWatched) {
+                view.setScore(
+                    game.homeTeamScore?.pointsTotal.toString(),
+                    game.visitorTeamScore?.pointsTotal.toString()
+                )
+            } else {
+                view.setScore("", "")
             }
         }
 

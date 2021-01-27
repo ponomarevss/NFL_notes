@@ -39,12 +39,12 @@ class GamesRVAdapter(val presenter: IGamesListPresenter) :
             visitorTeam_tv.text = visitorTeam
         }
 
-        override fun setScore(homeTeamScore: Int?, visitorTeamScore: Int?) = with(containerView) {
-            homeTeamScore_tv.text = homeTeamScore.toString()
-            visitorTeamScore_tv.text = visitorTeamScore.toString()
+        override fun setScore(homeTeamScore: String?, visitorTeamScore: String?) = with(containerView) {
+            homeTeamScore_tv.text = homeTeamScore
+            visitorTeamScore_tv.text = visitorTeamScore
         }
 
-        override fun loadImage(homeTeamLogo: String, visitorTeamLogo: String) {
+        override fun loadImage(homeTeamLogo: String?, visitorTeamLogo: String?) {
             TODO("Not yet implemented")
         }
     }
