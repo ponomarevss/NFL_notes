@@ -30,6 +30,9 @@ class GamesPresenter(val mainThreadScheduler: Scheduler, val repo: IDataRepo) :
                 game.homeTeam?.id?.let { getTeamById(it)?.abbr },
                 game.visitorTeam?.id?.let { getTeamById(it)?.abbr }
             )
+            if (game.isWatched){
+                view.setScore(game.homeTeamScore?.pointsTotal, game.visitorTeamScore?.pointsTotal)
+            }
         }
 
         private fun getTeamById(teamId: String): Team? {
@@ -53,11 +56,8 @@ class GamesPresenter(val mainThreadScheduler: Scheduler, val repo: IDataRepo) :
         //todo: вводить данные из viewState
 
         gamesListPresenter.itemClickListener = { itemView ->
-            itemView.setScore(
-                gamesListPresenter.games[itemView.pos].homeTeamScore?.pointsTotal,
-                gamesListPresenter.games[itemView.pos].visitorTeamScore?.pointsTotal
-            )
-
+            gamesListPresenter.games[itemView.pos].isWatched = true
+            viewState.updateList()
             //todo:отображать результат игры, формировать сводную таблицу
         }
     }
@@ -89,13 +89,13 @@ class GamesPresenter(val mainThreadScheduler: Scheduler, val repo: IDataRepo) :
                         println("teamsResponse: $teamsResponse")
                         gamesListPresenter.teams.clear()
                         teamsResponse.teams?.let { it -> gamesListPresenter.teams.addAll(it) }
+                        viewState.updateList()
                     }, {
                         println("Can't get the teamsResponse: ${it.message}")
                     })
             }, {
                 println("Can't get the authResponse: ${it.message}")
             })
-//        viewState.updateList()
     }
 
 }
