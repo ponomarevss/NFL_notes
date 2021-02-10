@@ -6,32 +6,48 @@ import com.example.nflnotes.R
 import com.example.nflnotes.mvp.model.api.ApiHolder
 import com.example.nflnotes.mvp.model.repo.RetrofitDataRepo
 import com.example.nflnotes.mvp.presenter.GamesPresenter
+import com.example.nflnotes.mvp.presenter.MainPresenter
 import com.example.nflnotes.mvp.view.GamesView
+import com.example.nflnotes.mvp.view.MainView
+import com.example.nflnotes.ui.App
+import com.example.nflnotes.ui.BackButtonListener
 import com.example.nflnotes.ui.adapter.GamesRVAdapter
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import moxy.MvpAppCompatActivity
 import moxy.ktx.moxyPresenter
+import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
-class MainActivity : MvpAppCompatActivity(), GamesView {
+class MainActivity : MvpAppCompatActivity(), MainView {
 
-    private val presenter by moxyPresenter {
-        GamesPresenter(AndroidSchedulers.mainThread(), RetrofitDataRepo(ApiHolder.api))
+    val navigatorHolder = App.instance.navigatorHolder
+    val navigator = SupportAppNavigator(this, supportFragmentManager, R.id.container)
+
+    val presenter by moxyPresenter {
+        MainPresenter(App.instance.router)
     }
-    var adapter: GamesRVAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
 
-    override fun init() {
-        rv_games.layoutManager = LinearLayoutManager(this)
-        adapter = GamesRVAdapter(presenter.gamesListPresenter)
-        rv_games.adapter = adapter
+    override fun onResumeFragments() {
+        super.onResumeFragments()
+        navigatorHolder.setNavigator(navigator)
     }
 
-    override fun updateList() {
-        adapter?.notifyDataSetChanged()
+    override fun onPause() {
+        super.onPause()
+        navigatorHolder.removeNavigator()
+    }
+
+    override fun onBackPressed() {
+        supportFragmentManager.fragments.forEach {
+            if (it is BackButtonListener && it.backPressed()) {
+                return
+            }
+        }
+        presenter.backPressed()
     }
 }

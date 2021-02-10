@@ -12,8 +12,9 @@ import com.example.nflnotes.mvp.view.GamesView
 import com.example.nflnotes.mvp.view.list.IGameItemView
 import io.reactivex.rxjava3.core.Scheduler
 import moxy.MvpPresenter
+import ru.terrakok.cicerone.Router
 
-class GamesPresenter(val mainThreadScheduler: Scheduler, val repo: IDataRepo) :
+class GamesPresenter(val mainThreadScheduler: Scheduler, val repo: IDataRepo, val router: Router) :
     MvpPresenter<GamesView>() {
 
     class GamesListPresenter : IGamesListPresenter {
@@ -108,5 +109,12 @@ class GamesPresenter(val mainThreadScheduler: Scheduler, val repo: IDataRepo) :
                 println("Can't get the authResponse: ${it.message}")
             })
     }
+
+    fun backPressed() = router.exit().let { true }
+
+//    fun backPressed() : Boolean {
+//        router.exit()
+//        return true
+//    }
 
 }
