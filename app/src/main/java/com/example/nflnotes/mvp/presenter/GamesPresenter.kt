@@ -110,6 +110,14 @@ class GamesPresenter(val mainThreadScheduler: Scheduler, val repo: IDataRepo, va
             })
     }
 
+    fun weekPressed() {
+        //todo
+    }
+
+    fun tablePressed() {
+        //todo
+    }
+
     fun backPressed() = router.exit().let { true }
 
 //    fun backPressed() : Boolean {

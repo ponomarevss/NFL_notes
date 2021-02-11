@@ -1,0 +1,11 @@
+package com.example.nflnotes.mvp.view
+
+import moxy.MvpView
+import moxy.viewstate.strategy.alias.AddToEndSingle
+
+@AddToEndSingle
+interface WeekView : MvpView {
+    fun init()
+    fun setSeasons()
+    fun setWeeks()
+}
