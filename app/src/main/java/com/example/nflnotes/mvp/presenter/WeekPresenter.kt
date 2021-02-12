@@ -10,7 +10,7 @@ class WeekPresenter(val router: Router) :
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        viewState.init()
+//        viewState.init()
     }
 
     fun backPressed() = router.exit().let { true }

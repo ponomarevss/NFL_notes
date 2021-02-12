@@ -10,6 +10,7 @@ import com.example.nflnotes.mvp.model.repo.IDataRepo
 import com.example.nflnotes.mvp.presenter.list.IGamesListPresenter
 import com.example.nflnotes.mvp.view.GamesView
 import com.example.nflnotes.mvp.view.list.IGameItemView
+import com.example.nflnotes.navigation.Screens
 import io.reactivex.rxjava3.core.Scheduler
 import moxy.MvpPresenter
 import ru.terrakok.cicerone.Router
@@ -77,10 +78,10 @@ class GamesPresenter(val mainThreadScheduler: Scheduler, val repo: IDataRepo, va
     fun getGames(query: GamesQuery) {
         repo.getToken()
             .subscribe({ token ->
+                println("token: $token")
                 repo.getGames(token, query)
                     .observeOn(mainThreadScheduler)
                     .subscribe({ gamesResponse ->
-                        println("gamesResponse: $gamesResponse")
                         gamesListPresenter.games.clear()
                         gamesResponse.games?.let { it -> gamesListPresenter.games.addAll(it) }
                         viewState.updateList()
@@ -98,7 +99,6 @@ class GamesPresenter(val mainThreadScheduler: Scheduler, val repo: IDataRepo, va
                 repo.getTeams(token, query)
                     .observeOn(mainThreadScheduler)
                     .subscribe({ teamsResponse ->
-                        println("teamsResponse: $teamsResponse")
                         gamesListPresenter.teams.clear()
                         teamsResponse.teams?.let { it -> gamesListPresenter.teams.addAll(it) }
                         viewState.updateList()
@@ -111,18 +111,13 @@ class GamesPresenter(val mainThreadScheduler: Scheduler, val repo: IDataRepo, va
     }
 
     fun weekPressed() {
-        //todo
+        router.navigateTo(Screens.WeekScreen())
     }
 
     fun tablePressed() {
-        //todo
+        router.navigateTo(Screens.TableScreen())
     }
 
     fun backPressed() = router.exit().let { true }
-
-//    fun backPressed() : Boolean {
-//        router.exit()
-//        return true
-//    }
 
 }
