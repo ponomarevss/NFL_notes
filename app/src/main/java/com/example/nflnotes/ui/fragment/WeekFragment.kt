@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.nflnotes.R
 import com.example.nflnotes.mvp.model.api.ApiHolder
@@ -34,15 +35,20 @@ class WeekFragment : MvpAppCompatFragment(), WeekView, BackButtonListener {
         View.inflate(context, R.layout.fragment_week, null)
 
     override fun init() {
-        TODO("Not yet implemented")
+        setSeasons()
+        setWeeks()
     }
 
-    override fun setSeasons() {
-        TODO("Not yet implemented")
+    private fun setSeasons() {
+        val adapter = context?.let {
+            ArrayAdapter<String>(it, android.R.layout.simple_spinner_item, presenter.getSeasons())
+        }
     }
 
-    override fun setWeeks() {
-        TODO("Not yet implemented")
+    private fun setWeeks() {
+        val adapter = context?.let {
+            ArrayAdapter<String>(it, android.R.layout.simple_spinner_item, presenter.getWeeks())
+        }
     }
 
     override fun backPressed() = presenter.backPressed()

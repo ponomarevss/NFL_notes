@@ -1,5 +1,6 @@
 package com.example.nflnotes.mvp.presenter
 
+import com.example.nflnotes.mvp.model.entity.WeekConstructor
 import com.example.nflnotes.mvp.view.WeekView
 import moxy.MvpPresenter
 import ru.terrakok.cicerone.Router
@@ -10,8 +11,12 @@ class WeekPresenter(val router: Router) :
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-//        viewState.init()
+        viewState.init()
     }
+
+    fun getSeasons() = WeekConstructor.seasons.map { it.toString() }
+
+    fun getWeeks() = WeekConstructor.weeks.map { "${it.seasonType} ${it.week}" }
 
     fun backPressed() = router.exit().let { true }
 

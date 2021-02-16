@@ -6,6 +6,4 @@ import moxy.viewstate.strategy.alias.AddToEndSingle
 @AddToEndSingle
 interface WeekView : MvpView {
     fun init()
-    fun setSeasons()
-    fun setWeeks()
 }
