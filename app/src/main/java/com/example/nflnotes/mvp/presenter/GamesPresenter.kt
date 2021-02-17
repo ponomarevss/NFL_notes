@@ -15,7 +15,7 @@ import io.reactivex.rxjava3.core.Scheduler
 import moxy.MvpPresenter
 import ru.terrakok.cicerone.Router
 
-class GamesPresenter(val mainThreadScheduler: Scheduler, val repo: IDataRepo, val router: Router) :
+class GamesPresenter(val mainThreadScheduler: Scheduler, val week: Week, val repo: IDataRepo, val router: Router) :
     MvpPresenter<GamesView>() {
 
     class GamesListPresenter : IGamesListPresenter {

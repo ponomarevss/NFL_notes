@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.nflnotes.R
 import com.example.nflnotes.mvp.model.api.ApiHolder
+import com.example.nflnotes.mvp.model.entity.query.Week
 import com.example.nflnotes.mvp.model.repo.RetrofitDataRepo
 import com.example.nflnotes.mvp.presenter.GamesPresenter
 import com.example.nflnotes.mvp.view.GamesView
@@ -21,11 +22,15 @@ import moxy.ktx.moxyPresenter
 class GamesFragment : MvpAppCompatFragment(), GamesView, BackButtonListener {
 
     companion object {
-        fun newInstance() = GamesFragment()
+        private const val WEEK = "week"
+        fun newInstance(week: Week) = GamesFragment().apply {
+            arguments = Bundle().apply { this.putParcelable(WEEK, week) }
+        }
     }
 
     private val presenter by moxyPresenter {
-        GamesPresenter(AndroidSchedulers.mainThread(), RetrofitDataRepo(ApiHolder.api), App.instance.router)
+        val week = arguments?.getParcelable<Week>(WEEK) as Week
+        GamesPresenter(AndroidSchedulers.mainThread(), week, RetrofitDataRepo(ApiHolder.api), App.instance.router)
     }
     var adapter: GamesRVAdapter? = null
 
